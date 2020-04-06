@@ -1,0 +1,27 @@
+{
+  "name": "find-webpack",
+  "version": "1.0.0",
+  "description": "Utility to find webpack settings in react-scripts and other situations",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bahmutov/find-webpack.git"
+  },
+  "keywords": [
+    "webpack",
+    "utility"
+  ],
+  "author": "Gleb Bahmutov <gleb.bahmutov@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/bahmutov/find-webpack/issues"
+  },
+  "homepage": "https://github.com/bahmutov/find-webpack#readme",
+  "dependencies": {
+    "debug": "4.1.1",
+    "find-yarn-workspace-root": "1.2.1"
+  }
+}
