@@ -15,6 +15,22 @@ const config = fw.getWebpackOptions()
 
 Works with `react-scripts` and ejected `react-scripts`. Uses `development` environment.
 
+### Cypress
+
+There is a utility method for cleaning up the found Webpack config for using with Cypress webpack preprocessor: removing optimization plugins, etc.
+
+```js
+const fw = require('find-webpack')
+const config = fw.getWebpackOptions()
+if (config) {
+  // config is modified in place
+  const opts = {
+    coverage: true // adds babel-plugin-istanbul
+  }
+  fw.cleanForCypress(opts, config)
+}
+```
+
 ## Debugging
 
 Run with environment variable `DEBUG=find-webpack` to see verbose logs
