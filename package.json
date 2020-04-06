@@ -3,6 +3,9 @@
   "version": "0.0.0-development",
   "description": "Utility to find webpack settings in react-scripts and other situations",
   "main": "index.js",
+  "files": [
+    "index.js"
+  ],
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "semantic-release": "semantic-release"
