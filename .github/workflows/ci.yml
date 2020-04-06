@@ -10,12 +10,6 @@ jobs:
       - name: Install NPM dependencies 📦
         uses: bahmutov/npm-install@v1
 
-      - name: Run tests 🧪
-        run: npm test
-
-      - name: Show GitHub variables 📊
-        run: npm run github-demo
-
       - name: Semantic Release 🚀
         uses: cycjimmy/semantic-release-action@v2
         env:
