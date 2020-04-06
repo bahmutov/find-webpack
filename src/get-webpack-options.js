@@ -1,3 +1,4 @@
+// @ts-check
 const debug = require('debug')('find-webpack')
 const path = require('path')
 const findYarnWorkspaceRoot = require('find-yarn-workspace-root')
@@ -53,6 +54,4 @@ const getWebpackOptions = () => {
   debug('could not find webpack options')
 }
 
-module.exports = {
-  getWebpackOptions
-}
+module.exports = getWebpackOptions
