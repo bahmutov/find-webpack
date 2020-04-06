@@ -1,14 +1,15 @@
 {
   "name": "find-webpack",
-  "version": "1.0.0",
+  "version": "0.0.0-development",
   "description": "Utility to find webpack settings in react-scripts and other situations",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "semantic-release": "semantic-release"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/bahmutov/find-webpack.git"
+    "url": "https://github.com/bahmutov/find-webpack.git"
   },
   "keywords": [
     "webpack",
@@ -23,5 +24,8 @@
   "dependencies": {
     "debug": "4.1.1",
     "find-yarn-workspace-root": "1.2.1"
+  },
+  "devDependencies": {
+    "semantic-release": "^17.0.4"
   }
 }
