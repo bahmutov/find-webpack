@@ -1,6 +1,20 @@
 # find-webpack [![semantic-release][semantic-image] ][semantic-url] [![Build status][ci-image] ][ci-url]
 > Utility to find webpack settings in react-scripts and other situations
 
+## Use
+
+```shell
+npm i -S find-webpack
+```
+
+```js
+const fw = require('find-webpack')
+const config = fw.getWebpackOptions()
+// if config is an object, we found it!
+```
+
+Works with `react-scripts` and ejected `react-scripts`. Uses `development` environment.
+
 ## Debugging
 
 Run with environment variable `DEBUG=find-webpack` to see verbose logs
