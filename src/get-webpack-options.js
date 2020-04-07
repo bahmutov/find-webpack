@@ -14,8 +14,10 @@ const tryLoadingWebpackConfig = (webpackConfigPath) => {
     NODE_ENV: envName
   })
   try {
-    const webpackFactory = require(webpackConfigPath)
-    const webpackOptions = webpackFactory(envName)
+    let webpackOptions = require(webpackConfigPath)
+    if (typeof webpackOptions === 'function') {
+      webpackOptions = webpackOptions(envName)
+    }
     debug('webpack options: %o', webpackOptions)
     return webpackOptions
   } catch (err) {
@@ -23,6 +25,29 @@ const tryLoadingWebpackConfig = (webpackConfigPath) => {
     debug('error %s', err.message)
     restoreEnv()
   }
+}
+
+const tryVueCLIScripts = () => {
+  const webpackConfigPath = path.resolve(
+    findYarnWorkspaceRoot() || process.cwd(),
+    'node_modules',
+    '@vue',
+    'cli-service',
+    'webpack.config.js',
+  )
+
+  debug('path to Vue CLI resolved webpack.config.js: %s', webpackConfigPath)
+  return tryLoadingWebpackConfig(webpackConfigPath)
+}
+
+const tryRootProjectWebpack = () => {
+  const webpackConfigPath = path.resolve(
+    findYarnWorkspaceRoot() || process.cwd(),
+    'webpack.config.js',
+  )
+
+  debug('path to root webpack.config.js: %s', webpackConfigPath)
+  return tryLoadingWebpackConfig(webpackConfigPath)
 }
 
 const tryReactScripts = () => {
@@ -44,14 +69,12 @@ const tryEjectedReactScripts = () => {
 }
 
 const getWebpackOptions = () => {
-  let webpackOptions = tryReactScripts()
-  if (webpackOptions) {
-    return webpackOptions
-  }
-  webpackOptions = tryEjectedReactScripts()
-  if (webpackOptions) {
-    return webpackOptions
-  }
+  // TODO: nice user error message if we can't find any of the normal webpack
+  // configurations
+  return tryReactScripts() ||
+  tryEjectedReactScripts() ||
+  tryVueCLIScripts() ||
+  tryRootProjectWebpack() ||
   debug('could not find webpack options')
 }
 
