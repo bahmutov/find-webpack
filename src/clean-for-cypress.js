@@ -65,9 +65,36 @@ function cleanForCypress (opts, webpackOptions) {
     throw new Error(`cannot clean up config - missing webpack options object`)
   }
 
-  // remove bunch of options, we just need to bundle spec files
-  delete webpackOptions.optimization
-  delete webpackOptions.plugins
+  // are we cleaning Webpack from react-scripts?
+  const reactScripts = opts && opts.reactScripts
+
+  if (reactScripts) {
+    debug('cleaning webpack for react-scripts')
+    // we assume the webpack is installed if we found its config
+    const webpack = require('webpack')
+
+    if (webpackOptions.optimization) {
+      // these two plugins often cause problems loading tests
+      delete webpackOptions.optimization.splitChunks
+      delete webpackOptions.optimization.runtimeChunk
+      debug('deleted split chunks and runtime chunks optimizations')
+    }
+
+    // by limiting EVERYTHING into a single chunk
+    // we bundle lazy loaded components into the same spec bundle
+    // example in https://github.com/bahmutov/test-mdx-example/issues/1
+    webpackOptions.plugins = webpackOptions.plugins || []
+    webpackOptions.plugins.push(
+      new webpack.optimize.LimitChunkCountPlugin({
+        maxChunks: 1 // no chunks from dynamic imports -- includes the entry file
+      })
+    )
+    debug('cleaned webpack %o', webpackOptions)
+  } else {
+    // remove bunch of options, we just need to bundle spec files
+    delete webpackOptions.optimization
+    delete webpackOptions.plugins
+  }
 
   addCypressToEslintRules(webpackOptions)
   const insertCoveragePlugin = opts && opts.coverage

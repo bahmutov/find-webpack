@@ -25,6 +25,7 @@ const config = fw.getWebpackOptions()
 if (config) {
   // config is modified in place
   const opts = {
+    reactScripts: true, // cleaning for react-scripts?
     coverage: true // adds babel-plugin-istanbul
   }
   fw.cleanForCypress(opts, config)
