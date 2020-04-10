@@ -68,14 +68,29 @@ const tryEjectedReactScripts = () => {
   return tryLoadingWebpackConfig(webpackConfigPath)
 }
 
+const tryWebpackInReactScriptsModule = () => {
+  const webpackConfigModuleName = 'react-scripts/config/webpack.config.js'
+  debug('trying to require webpack.config.js: %s', webpackConfigModuleName)
+  return tryLoadingWebpackConfig(webpackConfigModuleName)
+}
+
+/**
+ * Tries really hard to find Webpack config file
+ * and load it using development environment name.
+ */
 const getWebpackOptions = () => {
-  // TODO: nice user error message if we can't find any of the normal webpack
-  // configurations
-  return tryReactScripts() ||
-  tryEjectedReactScripts() ||
-  tryVueCLIScripts() ||
-  tryRootProjectWebpack() ||
-  debug('could not find webpack options')
+  const webpackOptions = tryReactScripts() ||
+    tryEjectedReactScripts() ||
+    tryVueCLIScripts() ||
+    tryRootProjectWebpack() ||
+    tryWebpackInReactScriptsModule()
+
+  if (!webpackOptions) {
+    // TODO: nice user error message if we can't find
+    // any of the normal webpack configurations
+    debug('could not find webpack options')
+  }
+  return webpackOptions
 }
 
 module.exports = getWebpackOptions
