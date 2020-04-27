@@ -75,6 +75,16 @@ const tryWebpackInReactScriptsModule = () => {
 }
 
 /**
+ * Try loading React scripts webpack config using "require" - because maybe
+ * the `react-scripts` were installed in a parent folder (but without using Yarn workspace)
+*/
+const tryRequireReactScripts = () => {
+  const webpackConfigPath = 'react-scripts/config/webpack.config.js'
+  debug('trying require react-scripts: %s', webpackConfigPath)
+  return tryLoadingWebpackConfig(webpackConfigPath)
+}
+
+/**
  * Tries really hard to find Webpack config file
  * and load it using development environment name.
  */
@@ -83,7 +93,8 @@ const getWebpackOptions = () => {
     tryEjectedReactScripts() ||
     tryVueCLIScripts() ||
     tryRootProjectWebpack() ||
-    tryWebpackInReactScriptsModule()
+    tryWebpackInReactScriptsModule() ||
+    tryRequireReactScripts()
 
   if (!webpackOptions) {
     // TODO: nice user error message if we can't find
