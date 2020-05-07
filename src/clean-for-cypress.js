@@ -27,9 +27,7 @@ const addCypressToEslintRules = (webpackOptions) => {
   }
 }
 
-// note: modifies the argument object in place
-const addCodeCoverage = (webpackOptions) => {
-  debug('trying to add code instrumentation plugin')
+const findBabelRule = (webpackOptions) => {
   if (!webpackOptions) {
     return
   }
@@ -45,6 +43,13 @@ const addCodeCoverage = (webpackOptions) => {
     return
   }
   const babelRule = oneOfRule.oneOf.find(rule => rule.loader && rule.loader.includes('/babel-loader/'))
+  return babelRule
+}
+
+// note: modifies the argument object in place
+const addCodeCoverage = (webpackOptions) => {
+  debug('trying to add code instrumentation plugin')
+  const babelRule = findBabelRule(webpackOptions)
   if (!babelRule) {
     return
   }
@@ -57,6 +62,26 @@ const addCodeCoverage = (webpackOptions) => {
   }
   babelRule.options.plugins.push('babel-plugin-istanbul')
   debug('added babel-plugin-istanbul')
+}
+
+const addComponentFolder = (addFolderToTranspile, webpackOptions) => {
+  if (!addFolderToTranspile) {
+    debug('no extra folders to transpile using Babel')
+    return
+  }
+
+  debug('trying to transpile component tests folder using Babel')
+  const babelRule = findBabelRule(webpackOptions)
+  if (!babelRule) {
+    debug('could not find Babel rule')
+    return
+  }
+  debug('babel rule %o', babelRule)
+  if (typeof babelRule.include === 'string') {
+    babelRule.include = [babelRule.include]
+  }
+  babelRule.include.push('/Users/gleb/git/try-cra-with-unit-test/cypress/component')
+  debug('added component tests folder to babel rules')
 }
 
 function cleanForCypress (opts, webpackOptions) {
@@ -89,6 +114,9 @@ function cleanForCypress (opts, webpackOptions) {
         maxChunks: 1 // no chunks from dynamic imports -- includes the entry file
       })
     )
+
+    const addFolderToTranspile = opts && opts.addFolderToTranspile
+    addComponentFolder(addFolderToTranspile, webpackOptions)
     debug('cleaned webpack %o', webpackOptions)
   } else {
     // remove bunch of options, we just need to bundle spec files
