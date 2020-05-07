@@ -32,6 +32,19 @@ if (config) {
 }
 ```
 
+If you are using `opts.reactScripts = true`, you can also add the component test folder to be transpiled using the same options as `src` folder.
+
+```js
+const componentTestFolder = ... // from Cypress config
+// config is modified in place
+const opts = {
+  reactScripts: true, // cleaning for react-scripts?
+  addFolderToTranspile: componentTestFolder,
+  coverage: true // adds babel-plugin-istanbul
+}
+fw.cleanForCypress(opts, config)
+```
+
 ## Debugging
 
 Run with environment variable `DEBUG=find-webpack` to see verbose logs
