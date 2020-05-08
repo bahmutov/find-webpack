@@ -4,17 +4,24 @@ const debug = require('debug')('find-webpack')
 // note: modifies the argument object in place
 const addCypressToEslintRules = (webpackOptions) => {
   if (webpackOptions.module && Array.isArray(webpackOptions.module.rules)) {
-    const modulePre = webpackOptions.module.rules.find(rule => rule.enforce === 'pre')
+    const modulePre = webpackOptions.module.rules.find(
+      (rule) => rule.enforce === 'pre',
+    )
     if (modulePre && Array.isArray(modulePre.use)) {
       debug('found Pre block %o', modulePre)
 
-      const useEslintLoader = modulePre.use.find(use => use.loader && use.loader.includes('eslint-loader'))
+      const useEslintLoader = modulePre.use.find(
+        (use) => use.loader && use.loader.includes('eslint-loader'),
+      )
       if (useEslintLoader) {
         debug('found useEslintLoader %o', useEslintLoader)
 
         if (useEslintLoader.options) {
           if (Array.isArray(useEslintLoader.options.globals)) {
-            debug('adding cy to existing globals %o', useEslintLoader.options.globals)
+            debug(
+              'adding cy to existing globals %o',
+              useEslintLoader.options.globals,
+            )
             useEslintLoader.options.globals.push('cy')
             useEslintLoader.options.globals.push('Cypress')
           } else {
@@ -38,11 +45,15 @@ const findBabelRule = (webpackOptions) => {
   if (!Array.isArray(webpackOptions.module.rules)) {
     return
   }
-  const oneOfRule = webpackOptions.module.rules.find(rule => Array.isArray(rule.oneOf))
+  const oneOfRule = webpackOptions.module.rules.find((rule) =>
+    Array.isArray(rule.oneOf),
+  )
   if (!oneOfRule) {
     return
   }
-  const babelRule = oneOfRule.oneOf.find(rule => rule.loader && rule.loader.includes('/babel-loader/'))
+  const babelRule = oneOfRule.oneOf.find(
+    (rule) => rule.loader && rule.loader.includes('/babel-loader/'),
+  )
   return babelRule
 }
 
@@ -80,12 +91,12 @@ const addComponentFolder = (addFolderToTranspile, webpackOptions) => {
   if (typeof babelRule.include === 'string') {
     babelRule.include = [babelRule.include]
   }
-  babelRule.include.push('/Users/gleb/git/try-cra-with-unit-test/cypress/component')
+  babelRule.include.push(addFolderToTranspile)
   debug('added component tests folder to babel rules')
 }
 
-function cleanForCypress (opts, webpackOptions) {
-  debug('top level opts %o', opts)
+function cleanForCypress(opts, webpackOptions) {
+  debug('cleanForCypress: top level opts %o', opts)
   if (!webpackOptions) {
     throw new Error(`cannot clean up config - missing webpack options object`)
   }
@@ -111,8 +122,8 @@ function cleanForCypress (opts, webpackOptions) {
     webpackOptions.plugins = webpackOptions.plugins || []
     webpackOptions.plugins.push(
       new webpack.optimize.LimitChunkCountPlugin({
-        maxChunks: 1 // no chunks from dynamic imports -- includes the entry file
-      })
+        maxChunks: 1, // no chunks from dynamic imports -- includes the entry file
+      }),
     )
 
     const addFolderToTranspile = opts && opts.addFolderToTranspile
