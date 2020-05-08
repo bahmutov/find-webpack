@@ -30,6 +30,7 @@
     "mocked-env": "1.3.2"
   },
   "devDependencies": {
+    "prettier": "2.0.5",
     "semantic-release": "^17.0.4"
   }
 }
