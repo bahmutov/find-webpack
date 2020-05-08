@@ -1,4 +1,5 @@
 # find-webpack [![semantic-release][semantic-image] ][semantic-url] [![Build status][ci-image] ][ci-url]
+
 > Utility to find webpack settings in react-scripts and other situations
 
 ## Use
@@ -15,6 +16,8 @@ const config = fw.getWebpackOptions()
 
 Works with `react-scripts` and ejected `react-scripts`. Uses `development` environment.
 
+**Note:** `react-scripts` assumes there is `package.json` file in the current working directory, otherwise it won't load.
+
 ### Cypress
 
 There is a utility method for cleaning up the found Webpack config for using with Cypress webpack preprocessor: removing optimization plugins, etc.
@@ -26,7 +29,7 @@ if (config) {
   // config is modified in place
   const opts = {
     reactScripts: true, // cleaning for react-scripts?
-    coverage: true // adds babel-plugin-istanbul
+    coverage: true, // adds babel-plugin-istanbul
   }
   fw.cleanForCypress(opts, config)
 }
