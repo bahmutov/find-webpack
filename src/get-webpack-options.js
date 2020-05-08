@@ -98,6 +98,7 @@ const tryWebpackInReactScriptsModule = () => {
       debug('We could not find it in % s', process.cwd())
     }
   }
+  return found
 }
 
 /**
