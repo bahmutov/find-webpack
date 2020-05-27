@@ -49,21 +49,55 @@ const findBabelRule = (webpackOptions) => {
     Array.isArray(rule.oneOf),
   )
   if (!oneOfRule) {
+    debug('could not find oneOfRule')
     return
   }
+  debug('looking through oneOf rules')
   const babelRule = oneOfRule.oneOf.find(
     (rule) => rule.loader && rule.loader.includes('/babel-loader/'),
   )
   return babelRule
 }
 
+// see https://github.com/bahmutov/find-webpack/issues/7
+const findBabelLoaderRule = (webpackOptions) => {
+  debug('looking for babel-loader rule')
+  if (!webpackOptions) {
+    return
+  }
+  if (!webpackOptions.module) {
+    return
+  }
+  debug('webpackOptions.module %o', webpackOptions.module)
+  if (!Array.isArray(webpackOptions.module.rules)) {
+    return
+  }
+  const babelRule = webpackOptions.module.rules.find(
+    (rule) => rule.loader === 'babel-loader',
+  )
+  if (!babelRule) {
+    debug('could not find babel rule')
+    return
+  }
+
+  debug('found Babel rule that applies to %s', babelRule.test.toString())
+  return babelRule
+}
+
 // note: modifies the argument object in place
 const addCodeCoverage = (webpackOptions) => {
   debug('trying to add code instrumentation plugin')
-  const babelRule = findBabelRule(webpackOptions)
+  let babelRule = findBabelRule(webpackOptions)
   if (!babelRule) {
+    debug('could not find Babel rule using oneOf')
+    babelRule = findBabelLoaderRule(webpackOptions)
+  }
+
+  if (!babelRule) {
+    debug('could not find Babel rule')
     return
   }
+
   debug('babel rule %o', babelRule)
   if (!babelRule.options) {
     return
