@@ -53,6 +53,9 @@ const findBabelRule = (webpackOptions) => {
     return
   }
   debug('looking through oneOf rules')
+  debug('oneOfRule.oneOf %o', oneOfRule.oneOf)
+  oneOfRule.oneOf.forEach((rule) => debug('rule %o', rule))
+
   const babelRule = oneOfRule.oneOf.find(
     (rule) => rule.loader && rule.loader.includes('/babel-loader/'),
   )
