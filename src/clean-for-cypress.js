@@ -1,5 +1,6 @@
 // @ts-check
 const debug = require('debug')('find-webpack')
+const path = require('path')
 
 // note: modifies the argument object in place
 const addCypressToEslintRules = (webpackOptions) => {
@@ -34,6 +35,18 @@ const addCypressToEslintRules = (webpackOptions) => {
   }
 }
 
+/**
+ * Returns true if the provided loader path includes "babel-loader".
+ * Uses current OS path separator to split the loader path correctly.
+ */
+const isBabelLoader = (loaderPath) => {
+  if (!loaderPath) {
+    return false
+  }
+  const loaderPathParts = loaderPath.split(path.sep)
+  return loaderPathParts.some((pathPart) => pathPart === 'babel-loader')
+}
+
 const findBabelRule = (webpackOptions) => {
   if (!webpackOptions) {
     return
@@ -57,7 +70,7 @@ const findBabelRule = (webpackOptions) => {
   oneOfRule.oneOf.forEach((rule) => debug('rule %o', rule))
 
   const babelRule = oneOfRule.oneOf.find(
-    (rule) => rule.loader && rule.loader.includes('/babel-loader/'),
+    (rule) => rule.loader && isBabelLoader(rule.loader),
   )
   return babelRule
 }
