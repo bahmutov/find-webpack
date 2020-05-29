@@ -11,6 +11,7 @@ const tryLoadingWebpackConfig = (webpackConfigPath) => {
   debug('trying to load webpack config from %s', webpackConfigPath)
   // Do this as the first thing so that any code reading it knows the right env.
   const envName = 'development'
+
   // @ts-ignore
   const restoreEnv = mockEnv({
     BABEL_ENV: envName,
@@ -18,7 +19,15 @@ const tryLoadingWebpackConfig = (webpackConfigPath) => {
   })
   try {
     let webpackOptions = require(webpackConfigPath)
+
+    if (webpackOptions.default) {
+      // we probably loaded TS file
+      debug('loaded webpack options has .default - taking that as the config')
+      webpackOptions = webpackOptions.default
+    }
+
     if (typeof webpackOptions === 'function') {
+      debug('calling webpack function with environment "%s"', envName)
       webpackOptions = webpackOptions(envName)
     }
     debug('webpack options: %o', webpackOptions)
