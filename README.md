@@ -18,6 +18,17 @@ Works with `react-scripts` and ejected `react-scripts`. Uses `development` envir
 
 **Note:** `react-scripts` assumes there is `package.json` file in the current working directory, otherwise it won't load.
 
+### tryLoadingWebpackConfig
+
+Loading Webpack config from `webpack.config.js` might need `NODE_ENV` set, and other tricks.
+
+```js
+const fw = require('find-webpack')
+const config = fw.tryLoadingWebpackConfig('path/to/webpack.config.js')
+```
+
+Returns `undefined` if cannot load the config object
+
 ### Cypress
 
 There is a utility method for cleaning up the found Webpack config for using with Cypress webpack preprocessor: removing optimization plugins, etc.
