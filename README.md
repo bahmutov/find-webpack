@@ -27,7 +27,9 @@ const fw = require('find-webpack')
 const config = fw.tryLoadingWebpackConfig('path/to/webpack.config.js')
 ```
 
-Returns `undefined` if cannot load the config object
+Returns `undefined` if cannot load the config object.
+
+**Note:** when loading the config object, this module sets `process.env.BABEL_ENV` and `process.env.NODE_ENV` to `development` and keeps it.
 
 ### Cypress
 

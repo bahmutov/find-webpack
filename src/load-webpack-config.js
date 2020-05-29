@@ -31,7 +31,6 @@ const tryLoadingWebpackConfig = (webpackConfigPath) => {
       webpackOptions = webpackOptions(envName)
     }
     debug('webpack options: %o', webpackOptions)
-    restoreEnv()
     return webpackOptions
   } catch (err) {
     debug('could not load react-scripts webpack')
