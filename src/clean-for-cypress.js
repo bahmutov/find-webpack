@@ -80,12 +80,21 @@ const addComponentFolder = (addFolderToTranspile, webpackOptions) => {
 // https://github.com/bahmutov/cypress-react-unit-test/issues/233
 const addLooseModulesPlugin = (webpackOptions) => {
   debug('adding babel plugin plugin-transform-modules-commonjs')
-  const babelRule = findBabelRuleWrap(webpackOptions)
-  if (!babelRule) {
-    debug('could not find Babel rule')
+
+  const babelPlugins = findBabelPlugins(webpackOptions)
+  if (!Array.isArray(babelPlugins)) {
+    debug('cannot add code coverage, because cannot find Babel loader plugins')
     return
   }
-  debug('babel rule %o', babelRule)
+
+  // TODO check if the plugin is already there
+  debug('Babel plugins %o', babelPlugins)
+  babelPlugins.push([
+    '@babel/plugin-transform-modules-commonjs',
+    {
+      loose: true,
+    },
+  ])
 }
 
 function cleanForCypress(opts, webpackOptions) {

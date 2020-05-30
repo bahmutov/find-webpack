@@ -61,6 +61,8 @@ const opts = {
 fw.cleanForCypress(opts, config)
 ```
 
+and you can add option `looseModules: true` to insert Babel plugin [@babel/plugin-transform-modules-commonjs](https://babeljs.io/docs/en/babel-plugin-transform-modules-commonjs) to allow mocking named imports.
+
 ## Debugging
 
 Run with environment variable `DEBUG=find-webpack` to see verbose logs
