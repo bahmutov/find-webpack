@@ -71,11 +71,47 @@ const findBabelLoaderRule = (webpackOptions) => {
   return babelRule
 }
 
+const findBabelLoaderUseRule = (webpackOptions) => {
+  debug('looking for babel-loader rule with use property')
+  if (!webpackOptions) {
+    return
+  }
+  if (!webpackOptions.module) {
+    return
+  }
+  debug('webpackOptions.module %o', webpackOptions.module)
+  if (!Array.isArray(webpackOptions.module.rules)) {
+    return
+  }
+
+  debug('webpack module rules')
+  webpackOptions.module.rules.forEach((rule) => {
+    debug('rule %o', rule)
+  })
+  const babelRule = webpackOptions.module.rules.find(
+    (rule) => rule.use && rule.use.loader === 'babel-loader',
+  )
+  if (!babelRule) {
+    debug('could not find babel rule')
+    return
+  }
+
+  debug('found Babel use rule that applies to %s', babelRule.test.toString())
+
+  return babelRule.use
+}
+
 const findBabelRuleWrap = (webpackOptions) => {
   let babelRule = findBabelRule(webpackOptions)
+
   if (!babelRule) {
     debug('could not find Babel rule using oneOf')
     babelRule = findBabelLoaderRule(webpackOptions)
+  }
+
+  if (!babelRule) {
+    debug('could not find Babel rule directly')
+    babelRule = findBabelLoaderUseRule(webpackOptions)
   }
 
   if (!babelRule) {
@@ -101,10 +137,12 @@ const findBabelPlugins = (webpackOptions) => {
 
   debug('babel rule %o', babelRule)
   if (!babelRule.options) {
-    return
+    debug('babel rule does not have options, inserting')
+    babelRule.options = {}
   }
   if (!Array.isArray(babelRule.options.plugins)) {
-    return
+    debug('babel rule options does not have plugins, inserting')
+    babelRule.options.plugins = []
   }
 
   return babelRule.options.plugins
