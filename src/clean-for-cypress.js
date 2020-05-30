@@ -105,14 +105,24 @@ const findBabelLoaderRule = (webpackOptions) => {
   return babelRule
 }
 
-// note: modifies the argument object in place
-const addCodeCoverage = (webpackOptions) => {
-  debug('trying to add code instrumentation plugin')
+const findBabelRuleWrap = (webpackOptions) => {
   let babelRule = findBabelRule(webpackOptions)
   if (!babelRule) {
     debug('could not find Babel rule using oneOf')
     babelRule = findBabelLoaderRule(webpackOptions)
   }
+
+  if (!babelRule) {
+    debug('could not find Babel rule')
+    return
+  }
+  return babelRule
+}
+
+// note: modifies the argument object in place
+const addCodeCoverage = (webpackOptions) => {
+  debug('trying to add code instrumentation plugin')
+  const babelRule = findBabelRuleWrap(webpackOptions)
 
   if (!babelRule) {
     debug('could not find Babel rule')
@@ -137,7 +147,7 @@ const addComponentFolder = (addFolderToTranspile, webpackOptions) => {
   }
 
   debug('trying to transpile component tests folder using Babel')
-  const babelRule = findBabelRule(webpackOptions)
+  const babelRule = findBabelRuleWrap(webpackOptions)
   if (!babelRule) {
     debug('could not find Babel rule')
     return
@@ -146,6 +156,13 @@ const addComponentFolder = (addFolderToTranspile, webpackOptions) => {
   if (typeof babelRule.include === 'string') {
     babelRule.include = [babelRule.include]
   }
+
+  if (babelRule.include.includes(addFolderToTranspile)) {
+    // do not double include the same folder
+    debug('babel includes rule for folder %s', addFolderToTranspile)
+    return
+  }
+
   babelRule.include.push(addFolderToTranspile)
   debug('added component tests folder to babel rules')
 }
@@ -196,6 +213,11 @@ function cleanForCypress(opts, webpackOptions) {
   const insertCoveragePlugin = opts && opts.coverage
   if (insertCoveragePlugin) {
     addCodeCoverage(webpackOptions)
+  }
+
+  const looseModules = opts && opts.looseModules
+  if (looseModules) {
+    // addLooseModulesPlugin(webpackOptions)
   }
 
   return webpackOptions
