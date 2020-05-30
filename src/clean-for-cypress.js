@@ -44,7 +44,7 @@ const addCodeCoverage = (webpackOptions) => {
     return
   }
 
-  findBabelPlugins.push('babel-plugin-istanbul')
+  babelPlugins.push('babel-plugin-istanbul')
   debug('added babel-plugin-istanbul')
 }
 
