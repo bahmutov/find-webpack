@@ -1,6 +1,6 @@
 // @ts-check
 const debug = require('debug')('find-webpack')
-const path = require('path')
+const { findBabelRuleWrap, findBabelPlugins } = require('./find-babel-rule')
 
 // note: modifies the argument object in place
 const addCypressToEslintRules = (webpackOptions) => {
@@ -35,108 +35,16 @@ const addCypressToEslintRules = (webpackOptions) => {
   }
 }
 
-/**
- * Returns true if the provided loader path includes "babel-loader".
- * Uses current OS path separator to split the loader path correctly.
- */
-const isBabelLoader = (loaderPath) => {
-  if (!loaderPath) {
-    return false
-  }
-  const loaderPathParts = loaderPath.split(path.sep)
-  return loaderPathParts.some((pathPart) => pathPart === 'babel-loader')
-}
-
-const findBabelRule = (webpackOptions) => {
-  if (!webpackOptions) {
-    return
-  }
-  if (!webpackOptions.module) {
-    return
-  }
-  debug('webpackOptions.module %o', webpackOptions.module)
-  if (!Array.isArray(webpackOptions.module.rules)) {
-    return
-  }
-  const oneOfRule = webpackOptions.module.rules.find((rule) =>
-    Array.isArray(rule.oneOf),
-  )
-  if (!oneOfRule) {
-    debug('could not find oneOfRule')
-    return
-  }
-  debug('looking through oneOf rules')
-  debug('oneOfRule.oneOf %o', oneOfRule.oneOf)
-  oneOfRule.oneOf.forEach((rule) => debug('rule %o', rule))
-
-  const babelRule = oneOfRule.oneOf.find(
-    (rule) => rule.loader && isBabelLoader(rule.loader),
-  )
-  return babelRule
-}
-
-// see https://github.com/bahmutov/find-webpack/issues/7
-const findBabelLoaderRule = (webpackOptions) => {
-  debug('looking for babel-loader rule')
-  if (!webpackOptions) {
-    return
-  }
-  if (!webpackOptions.module) {
-    return
-  }
-  debug('webpackOptions.module %o', webpackOptions.module)
-  if (!Array.isArray(webpackOptions.module.rules)) {
-    return
-  }
-
-  debug('webpack module rules')
-  webpackOptions.module.rules.forEach((rule) => {
-    debug('rule %o', rule)
-  })
-  const babelRule = webpackOptions.module.rules.find(
-    (rule) => rule.loader === 'babel-loader',
-  )
-  if (!babelRule) {
-    debug('could not find babel rule')
-    return
-  }
-
-  debug('found Babel rule that applies to %s', babelRule.test.toString())
-  return babelRule
-}
-
-const findBabelRuleWrap = (webpackOptions) => {
-  let babelRule = findBabelRule(webpackOptions)
-  if (!babelRule) {
-    debug('could not find Babel rule using oneOf')
-    babelRule = findBabelLoaderRule(webpackOptions)
-  }
-
-  if (!babelRule) {
-    debug('could not find Babel rule')
-    return
-  }
-  return babelRule
-}
-
 // note: modifies the argument object in place
 const addCodeCoverage = (webpackOptions) => {
   debug('trying to add code instrumentation plugin')
-  const babelRule = findBabelRuleWrap(webpackOptions)
-
-  if (!babelRule) {
-    debug('could not find Babel rule')
+  const babelPlugins = findBabelPlugins(webpackOptions)
+  if (!Array.isArray(babelPlugins)) {
+    debug('cannot add code coverage, because cannot find Babel loader plugins')
     return
   }
 
-  debug('babel rule %o', babelRule)
-  if (!babelRule.options) {
-    return
-  }
-  if (!Array.isArray(babelRule.options.plugins)) {
-    return
-  }
-  babelRule.options.plugins.push('babel-plugin-istanbul')
+  findBabelPlugins.push('babel-plugin-istanbul')
   debug('added babel-plugin-istanbul')
 }
 
@@ -165,6 +73,19 @@ const addComponentFolder = (addFolderToTranspile, webpackOptions) => {
 
   babelRule.include.push(addFolderToTranspile)
   debug('added component tests folder to babel rules')
+}
+
+// https://babeljs.io/docs/en/babel-plugin-transform-modules-commonjs
+// loose ES6 modules allow us to dynamically mock imports during tests
+// https://github.com/bahmutov/cypress-react-unit-test/issues/233
+const addLooseModulesPlugin = (webpackOptions) => {
+  debug('adding babel plugin plugin-transform-modules-commonjs')
+  const babelRule = findBabelRuleWrap(webpackOptions)
+  if (!babelRule) {
+    debug('could not find Babel rule')
+    return
+  }
+  debug('babel rule %o', babelRule)
 }
 
 function cleanForCypress(opts, webpackOptions) {
@@ -217,7 +138,7 @@ function cleanForCypress(opts, webpackOptions) {
 
   const looseModules = opts && opts.looseModules
   if (looseModules) {
-    // addLooseModulesPlugin(webpackOptions)
+    addLooseModulesPlugin(webpackOptions)
   }
 
   return webpackOptions

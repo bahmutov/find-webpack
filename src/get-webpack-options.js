@@ -33,8 +33,38 @@ const tryReactScripts = () => {
   // maybe it is a monorepo situation
   const root = findYarnWorkspaceRoot() || process.cwd()
   debug('trying filename for react scripts from root %s', root)
-  const filename = path.resolve(
+
+  let filename = path.resolve(
     root,
+    'node_modules',
+    'react-scripts',
+    'config',
+    'webpack.config.js',
+  )
+  let found = tryLoadingWebpackConfig(filename)
+  if (found) {
+    return found
+  }
+
+  debug('trying .. folder')
+  filename = path.resolve(
+    root,
+    '..',
+    'node_modules',
+    'react-scripts',
+    'config',
+    'webpack.config.js',
+  )
+  found = tryLoadingWebpackConfig(filename)
+  if (found) {
+    return found
+  }
+
+  debug('trying ../.. folder')
+  filename = path.resolve(
+    root,
+    '..',
+    '..',
     'node_modules',
     'react-scripts',
     'config',
@@ -62,6 +92,7 @@ const tryWebpackInReactScriptsModule = () => {
     'trying to require webpack config via path: %s',
     webpackConfigModuleName,
   )
+  debug('in current directory %s', process.cwd())
 
   const found = tryLoadingWebpackConfig(webpackConfigModuleName)
   if (!found) {
