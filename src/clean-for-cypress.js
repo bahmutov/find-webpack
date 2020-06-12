@@ -4,6 +4,8 @@ const { findBabelRuleWrap, findBabelPlugins } = require('./find-babel-rule')
 
 // note: modifies the argument object in place
 const addCypressToEslintRules = (webpackOptions) => {
+  const globalsToAdd = ['cy', 'Cypress', 'before', 'after']
+
   if (webpackOptions.module && Array.isArray(webpackOptions.module.rules)) {
     const modulePre = webpackOptions.module.rules.find(
       (rule) => rule.enforce === 'pre',
@@ -23,12 +25,12 @@ const addCypressToEslintRules = (webpackOptions) => {
               'adding cy to existing globals %o',
               useEslintLoader.options.globals,
             )
-            useEslintLoader.options.globals.push('cy')
-            useEslintLoader.options.globals.push('Cypress')
+            useEslintLoader.options.globals.push(...globalsToAdd)
           } else {
             debug('setting new list of globals with cy and Cypress')
-            useEslintLoader.options.globals = ['cy', 'Cypress']
+            useEslintLoader.options.globals = globalsToAdd
           }
+          debug('updated globals %o', useEslintLoader.options.globals)
         }
       }
     }
