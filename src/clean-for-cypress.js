@@ -31,6 +31,8 @@ const addCypressToEslintRules = (webpackOptions) => {
             useEslintLoader.options.globals = globalsToAdd
           }
           debug('updated globals %o', useEslintLoader.options.globals)
+        } else {
+          debug('eslint loader does not have options ⚠️')
         }
       }
     }
