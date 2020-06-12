@@ -52,13 +52,16 @@ const addCodeCoverage = (webpackOptions) => {
   debug('added babel-plugin-istanbul')
 }
 
-const addComponentFolder = (addFolderToTranspile, webpackOptions) => {
+const addFolderToBabelTranspile = (addFolderToTranspile, webpackOptions) => {
   if (!addFolderToTranspile) {
-    debug('no extra folders to transpile using Babel')
+    debug('no extra folder to transpile using Babel')
     return
   }
 
-  debug('trying to transpile component tests folder using Babel')
+  debug(
+    'trying to transpile additional folder %s using Babel',
+    addFolderToTranspile,
+  )
   const babelRule = findBabelRuleWrap(webpackOptions)
   if (!babelRule) {
     debug('could not find Babel rule')
@@ -76,7 +79,7 @@ const addComponentFolder = (addFolderToTranspile, webpackOptions) => {
   }
 
   babelRule.include.push(addFolderToTranspile)
-  debug('added component tests folder to babel rules')
+  debug('added folder %s to babel rules', addFolderToTranspile)
 }
 
 // https://babeljs.io/docs/en/babel-plugin-transform-modules-commonjs
@@ -133,7 +136,12 @@ function cleanForCypress(opts, webpackOptions) {
     )
 
     const addFolderToTranspile = opts && opts.addFolderToTranspile
-    addComponentFolder(addFolderToTranspile, webpackOptions)
+    const addFolders = Array.isArray(addFolderToTranspile)
+      ? addFolderToTranspile
+      : [addFolderToTranspile]
+    addFolders.forEach((folderName) => {
+      addFolderToBabelTranspile(folderName, webpackOptions)
+    })
     debug('cleaned webpack %o', webpackOptions)
   } else {
     // remove bunch of options, we just need to bundle spec files

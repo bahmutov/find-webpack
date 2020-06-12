@@ -63,6 +63,22 @@ fw.cleanForCypress(opts, config)
 
 and you can add option `looseModules: true` to insert Babel plugin [@babel/plugin-transform-modules-commonjs](https://babeljs.io/docs/en/babel-plugin-transform-modules-commonjs) to allow mocking named imports.
 
+### addFolderToTranspile
+
+This setting could be an individual folder or a list of folders. For example, you might want to transpile component test folder and fixture folder to allow requiring fixture files from tests.
+
+```js
+const componentTestFolder = ... // from Cypress config
+const fixtureFolder = ... // from Cypress config
+// config is modified in place
+const opts = {
+  reactScripts: true, // cleaning for react-scripts?
+  addFolderToTranspile: [componentTestFolder, fixtureFolder],
+  coverage: true // adds babel-plugin-istanbul
+}
+fw.cleanForCypress(opts, config)
+```
+
 ## Debugging
 
 Run with environment variable `DEBUG=find-webpack` to see verbose logs
