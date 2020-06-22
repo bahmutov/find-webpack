@@ -4,7 +4,7 @@ const { findBabelRuleWrap, findBabelPlugins } = require('./find-babel-rule')
 
 // note: modifies the argument object in place
 const addCypressToEslintRules = (webpackOptions) => {
-  const globalsToAdd = ['cy', 'Cypress', 'before', 'after']
+  const globalsToAdd = ['cy', 'Cypress', 'before', 'after', 'context']
 
   if (webpackOptions.module && Array.isArray(webpackOptions.module.rules)) {
     const modulePre = webpackOptions.module.rules.find(
