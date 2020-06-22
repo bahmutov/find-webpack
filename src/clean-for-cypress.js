@@ -161,6 +161,16 @@ function cleanForCypress(opts, webpackOptions) {
     // we bundle lazy loaded components into the same spec bundle
     // example in https://github.com/bahmutov/test-mdx-example/issues/1
     webpackOptions.plugins = webpackOptions.plugins || []
+
+    // TODO how to better find a plugin? By name? By constructor?
+    webpackOptions.plugins = webpackOptions.plugins.filter((plugin) => {
+      // means the plugin is DefinePlugin
+      // https://webpack.js.org/plugins/define-plugin/
+      return typeof plugin.definitions === 'object'
+    })
+
+    debug('filtered plugins %o', webpackOptions.plugins)
+
     webpackOptions.plugins.push(
       new webpack.optimize.LimitChunkCountPlugin({
         maxChunks: 1, // no chunks from dynamic imports -- includes the entry file
