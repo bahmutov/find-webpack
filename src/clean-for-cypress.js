@@ -179,10 +179,9 @@ function cleanForCypress(opts, webpackOptions) {
   } else {
     // remove bunch of options, we just need to bundle spec files
     delete webpackOptions.optimization
+    debug('deleting webpack options plugins')
+    delete webpackOptions.plugins
   }
-
-  debug('deleting webpack options plugins')
-  delete webpackOptions.plugins
 
   addCypressToEslintRules(webpackOptions)
   const insertCoveragePlugin = opts && opts.coverage
