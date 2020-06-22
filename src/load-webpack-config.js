@@ -15,7 +15,9 @@ const tryLoadingWebpackConfig = (webpackConfigPath) => {
   // @ts-ignore
   const restoreEnv = mockEnv({
     BABEL_ENV: envName,
-    NODE_ENV: envName,
+    // always set env name to "test" to load test plugins
+    // and environment variables
+    NODE_ENV: 'test',
   })
   try {
     let webpackOptions = require(webpackConfigPath)
