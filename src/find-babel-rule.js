@@ -88,8 +88,13 @@ const findBabelLoaderUseRule = (webpackOptions) => {
   webpackOptions.module.rules.forEach((rule) => {
     debug('rule %o', rule)
   })
+
+  const isBabelLoader = (rule) => rule.use && rule.use.loader === 'babel-loader'
+  const isNextBabelLoader = (rule) =>
+    rule.use && rule.use.loader === 'next-babel-loader'
+
   const babelRule = webpackOptions.module.rules.find(
-    (rule) => rule.use && rule.use.loader === 'babel-loader',
+    (rule) => isBabelLoader(rule) || isNextBabelLoader(rule),
   )
   if (!babelRule) {
     debug('could not find babel rule')
