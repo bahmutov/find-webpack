@@ -164,9 +164,7 @@ function cleanForCypress(opts, webpackOptions) {
 
     // TODO how to better find a plugin? By name? By constructor?
     webpackOptions.plugins = webpackOptions.plugins.filter((plugin) => {
-      // means the plugin is DefinePlugin
-      // https://webpack.js.org/plugins/define-plugin/
-      return typeof plugin.definitions === 'object'
+      return ["DefinePlugin", "HotModuleReplacementPlugin", "ReactRefreshPlugin"].includes(plugin.constructor.name)
     })
 
     debug('filtered plugins %o', webpackOptions.plugins)
