@@ -68,6 +68,12 @@ const addFolderToBabelTranspile = (addFolderToTranspile, webpackOptions) => {
     return
   }
   debug('babel rule %o', babelRule)
+
+  if (!babelRule.include) {
+    debug('could not find Babel include condition')
+    return
+  }
+
   if (typeof babelRule.include === 'string') {
     babelRule.include = [babelRule.include]
   }
