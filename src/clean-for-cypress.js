@@ -169,8 +169,9 @@ function cleanForCypress(opts, webpackOptions) {
     webpackOptions.plugins = webpackOptions.plugins || []
 
     // TODO how to better find a plugin? By name? By constructor?
+    const acceptedPlugins = ["DefinePlugin", "HotModuleReplacementPlugin", "ProvidePlugin", "ReactRefreshPlugin"]
     webpackOptions.plugins = webpackOptions.plugins.filter((plugin) => {
-      return ["DefinePlugin", "HotModuleReplacementPlugin", "ReactRefreshPlugin"].includes(plugin.constructor.name)
+      return acceptedPlugins.includes(plugin.constructor.name)
     })
 
     debug('filtered plugins %o', webpackOptions.plugins)
