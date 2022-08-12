@@ -10,7 +10,8 @@
     "test:getWebpackOptions:tryReactScripts": "cd tests/getWebpackOptions/react-scripts && npm test",
     "test:getWebpackOptions:tryEjectedReactScripts": "cd tests/getWebpackOptions/ejected-react-scripts && npm test",
     "test:getWebpackOptions:tryVueCLIScripts": "cd tests/getWebpackOptions/vue-cli-scripts && npm test",
-    "test": "npm run test:getWebpackOptions:tryReactScripts && npm run test:getWebpackOptions:tryEjectedReactScripts && npm run test:getWebpackOptions:tryVueCLIScripts",
+    "test:getWebpackOptions:tryRootProjectWebpack": "cd tests/getWebpackOptions/root-project-webpack && npm test",
+    "test": "npm run test:getWebpackOptions:tryReactScripts && npm run test:getWebpackOptions:tryEjectedReactScripts && npm run test:getWebpackOptions:tryVueCLIScripts && npm run test:getWebpackOptions:tryRootProjectWebpack",
     "semantic-release": "semantic-release"
   },
   "repository": {
