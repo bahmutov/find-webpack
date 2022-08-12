@@ -7,7 +7,8 @@
     "src"
   ],
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test:getWebpackOptions:reactScripts": "cd tests/getWebpackOptions/reactScripts && npm test",
+    "test": "npm run test:getWebpackOptions:reactScripts",
     "semantic-release": "semantic-release"
   },
   "repository": {
@@ -31,6 +32,7 @@
   },
   "devDependencies": {
     "prettier": "2.0.5",
-    "semantic-release": "^17.0.4"
+    "semantic-release": "^17.0.4",
+    "uvu": "^0.5.6"
   }
 }
