@@ -8,7 +8,8 @@
   ],
   "scripts": {
     "test:getWebpackOptions:reactScripts": "cd tests/getWebpackOptions/reactScripts && npm test",
-    "test": "npm run test:getWebpackOptions:reactScripts",
+    "test:getWebpackOptions:ejectedReactScripts": "cd tests/getWebpackOptions/ejectedReactScripts && npm test",
+    "test": "npm run test:getWebpackOptions:reactScripts && npm run test:getWebpackOptions:ejectedReactScripts",
     "semantic-release": "semantic-release"
   },
   "repository": {
