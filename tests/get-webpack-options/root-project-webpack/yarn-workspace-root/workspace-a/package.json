@@ -1,0 +1,8 @@
+{
+  "name": "root-project-webpack-yarn-workspace-root-workspace-a",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "test": "node findwebpack.test.js"
+  }
+}

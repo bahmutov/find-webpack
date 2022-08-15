@@ -1,0 +1,11 @@
+{
+  "name": "reactscripts",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "test:deep:0": "cd deep-0 && npm test",
+    "test:deep:1": "cd deep-1/1 && npm test",
+    "test:deep:2": "cd deep-2/1/2 && npm test",
+    "test": "npm run test:deep:0 && npm run test:deep:1 && npm run test:deep:2"
+  }
+}

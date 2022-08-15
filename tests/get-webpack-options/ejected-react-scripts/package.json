@@ -1,0 +1,8 @@
+{
+  "name": "ejectedreactscripts",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "test": "node findwebpack.test.js"
+  }
+}

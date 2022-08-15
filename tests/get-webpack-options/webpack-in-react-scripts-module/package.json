@@ -1,0 +1,8 @@
+{
+  "name": "webpackinreactscriptsmodule",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "test": "cd parent && npm install && cd 1/2/3/4 && npm test"
+  }
+}

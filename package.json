@@ -7,7 +7,16 @@
     "src"
   ],
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test:get-webpack-options:react-scripts": "cd tests/get-webpack-options/react-scripts && npm test",
+    "test:get-webpack-options:ejected-react-scripts": "cd tests/get-webpack-options/ejected-react-scripts && npm test",
+    "test:get-webpack-options:vue-cli-scripts": "cd tests/get-webpack-options/vue-cli-scripts && npm test",
+    "test:get-webpack-options:root-project-webpack": "cd tests/get-webpack-options/root-project-webpack && npm test",
+    "test:get-webpack-options:webpack-in-react-scripts-module": "cd tests/get-webpack-options/webpack-in-react-scripts-module && npm test",
+    "test:get-webpack-options": "npm run test:get-webpack-options:react-scripts && npm run test:get-webpack-options:ejected-react-scripts && npm run test:get-webpack-options:vue-cli-scripts && npm run test:get-webpack-options:root-project-webpack && npm run test:get-webpack-options:webpack-in-react-scripts-module",
+    "test:clean-for-cypress": "node tests/clean-for-cypress.test.js",
+    "test:try-loading-webpack-config": "ts-node tests/try-loading-webpack-config/try-loading-webpack-config.test.js",
+    "test": "npm run test:try-loading-webpack-config && npm run test:clean-for-cypress && npm run test:get-webpack-options",
+    "test:coverage": "c8 npm test",
     "semantic-release": "semantic-release"
   },
   "repository": {
@@ -30,7 +39,11 @@
     "mocked-env": "1.3.2"
   },
   "devDependencies": {
+    "c8": "^7.12.0",
     "prettier": "2.0.5",
-    "semantic-release": "^17.0.4"
+    "semantic-release": "^17.0.4",
+    "ts-node": "^10.9.1",
+    "uvu": "^0.5.6",
+    "webpack": "^5.74.0"
   }
 }
