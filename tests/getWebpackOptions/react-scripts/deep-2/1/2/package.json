@@ -1,0 +1,8 @@
+{
+  "name": "reactscripts-deep-2-child",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "test": "cd ../.. && npm install && cd 1/2 && node findwebpack.test.js"
+  }
+}
