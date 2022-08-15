@@ -13,6 +13,7 @@
     "test:getWebpackOptions:tryRootProjectWebpack": "cd tests/getWebpackOptions/root-project-webpack && npm test",
     "test:getWebpackOptions:tryWebpackInReactScriptsModule": "cd tests/getWebpackOptions/webpack-in-react-scripts-module/parent/1/2/3/4 && npm test",
     "test": "npm run test:getWebpackOptions:tryReactScripts && npm run test:getWebpackOptions:tryEjectedReactScripts && npm run test:getWebpackOptions:tryVueCLIScripts && npm run test:getWebpackOptions:tryRootProjectWebpack && npm run test:getWebpackOptions:tryWebpackInReactScriptsModule",
+    "test:coverage": "c8 npm test",
     "semantic-release": "semantic-release"
   },
   "repository": {
@@ -35,6 +36,7 @@
     "mocked-env": "1.3.2"
   },
   "devDependencies": {
+    "c8": "^7.12.0",
     "prettier": "2.0.5",
     "semantic-release": "^17.0.4",
     "uvu": "^0.5.6"
