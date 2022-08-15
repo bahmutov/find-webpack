@@ -3,6 +3,6 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "test": "cd ../../../.. && npm install && cd 1/2/3/4 && node findwebpack.test.js"
+    "test": "node findwebpack.test.js"
   }
 }
