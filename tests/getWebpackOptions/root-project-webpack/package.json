@@ -3,6 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "test": "node findwebpack.test.js"
+    "test:process-cwd": "cd process-cwd && npm test",
+    "test:yarn-workspace-root": "cd yarn-workspace-root && npm test",
+    "test": "npm run test:process-cwd && npm run test:yarn-workspace-root"
   }
 }

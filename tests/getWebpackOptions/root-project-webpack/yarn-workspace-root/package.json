@@ -1,0 +1,9 @@
+{
+  "name": "root-project-webpack-yarn-workspace-root",
+  "version": "0.1.0",
+  "private": true,
+  "workspaces": ["workspace-a"],
+  "scripts": {
+    "test": "yarn install && cd workspace-a && npm test"
+  }
+}
