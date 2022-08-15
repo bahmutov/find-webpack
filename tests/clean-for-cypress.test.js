@@ -43,7 +43,7 @@ const demoConfig = {
     },
     plugins: [
       {
-        appSrcs: [],
+        appSrcs: ['old value'],
       },
     ],
   },
@@ -66,7 +66,7 @@ const demoConfig = {
         oneOf: [
           {
             loader: 'babel-loader',
-            include: [],
+            include: ['old value'],
             options: {
               plugins: [],
             },
@@ -78,8 +78,10 @@ const demoConfig = {
   performance: false,
 }
 
+const getEslintLoaderOption = (config) => config.module.rules[0].use[0].options
+
 const getEslintLoaderOptionGlobals = (config) =>
-  config.module.rules[0].use[0].options.globals
+  getEslintLoaderOption(config).globals
 
 const getBabelLoader = (config) => config.module.rules[1].oneOf[0]
 
@@ -117,6 +119,12 @@ test('cleanForCypress / should throw an exception if no webpack config is passed
 
 test('cleanForCypress / should add cypress globals to eslint rules', () => {
   assert.not(includesCypressInEslintGlobals(config))
+  cleanForCypress({}, config)
+  assert.ok(includesCypressInEslintGlobals(config))
+})
+
+test('cleanForCypress / should set cypress globals to eslint rules if they are not exist', () => {
+  delete getEslintLoaderOption(config).globals
   cleanForCypress({}, config)
   assert.ok(includesCypressInEslintGlobals(config))
 })
@@ -177,6 +185,17 @@ test('cleanForCypress / reactScripts:true / should add folder to transpile / whe
   assert.not(getBabelLoaderInclude(config).includes('foo'))
   assert.not(getModuleSourcePlugin(config).includes('foo'))
   cleanForCypress({ reactScripts: true, addFolderToTranspile: 'foo' }, config)
+  assert.ok(getBabelLoaderInclude(config).includes('old value'))
+  assert.ok(getModuleSourcePlugin(config).includes('old value'))
+  assert.ok(getBabelLoaderInclude(config).includes('foo'))
+  assert.ok(getModuleSourcePlugin(config).includes('foo'))
+})
+
+test('cleanForCypress / reactScripts:true / should add folder to transpile / when include is string', () => {
+  getBabelLoader(config).include = 'old value'
+  cleanForCypress({ reactScripts: true, addFolderToTranspile: 'foo' }, config)
+  assert.ok(getBabelLoaderInclude(config).includes('old value'))
+  assert.ok(getModuleSourcePlugin(config).includes('old value'))
   assert.ok(getBabelLoaderInclude(config).includes('foo'))
   assert.ok(getModuleSourcePlugin(config).includes('foo'))
 })
@@ -190,6 +209,8 @@ test('cleanForCypress / reactScripts:true / should add folder to transpile / whe
     { reactScripts: true, addFolderToTranspile: ['foo', 'bar'] },
     config,
   )
+  assert.ok(getBabelLoaderInclude(config).includes('old value'))
+  assert.ok(getModuleSourcePlugin(config).includes('old value'))
   assert.ok(getBabelLoaderInclude(config).includes('foo'))
   assert.ok(getModuleSourcePlugin(config).includes('foo'))
   assert.ok(getBabelLoaderInclude(config).includes('bar'))
